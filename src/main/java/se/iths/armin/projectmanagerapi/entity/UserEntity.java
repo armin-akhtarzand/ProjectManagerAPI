@@ -30,12 +30,13 @@ public class UserEntity {
     private String lastname;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserPosition userPosition;
+    @Column(nullable = false, name = "user_position")
+    private UserPosition userPosition = UserPosition.EMPLOYEE;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserStatus userStatus;
+    @Column(nullable = false, name = "user_status")
+    private UserStatus userStatus = UserStatus.ACTIVE;
+    @Enumerated(EnumType.STRING)
 
     @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
