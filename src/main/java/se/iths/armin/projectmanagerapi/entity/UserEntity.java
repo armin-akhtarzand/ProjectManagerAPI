@@ -8,6 +8,7 @@ import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
 import se.iths.armin.projectmanagerapi.entity.enums.UserStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user_entity")
@@ -46,6 +47,8 @@ public class UserEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "user")
+    List<ProjectUserEntity> projectUsers;
 
     @PrePersist
     public void onCreate() {

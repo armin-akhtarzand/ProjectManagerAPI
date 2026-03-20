@@ -7,6 +7,7 @@ import lombok.Setter;
 import se.iths.armin.projectmanagerapi.entity.enums.ProjectStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "project")
@@ -25,6 +26,8 @@ public class ProjectEntity {
     @Column(length = 1000)
     private String description;
 
+    @OneToMany(mappedBy = "project")
+    private List<ProjectUserEntity> projectUsers;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "project_status")
