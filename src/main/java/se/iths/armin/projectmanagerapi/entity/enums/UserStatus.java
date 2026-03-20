@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi.entity;
+package se.iths.armin.projectmanagerapi.entity.enums;
 
 public enum UserStatus {
     ACTIVE,

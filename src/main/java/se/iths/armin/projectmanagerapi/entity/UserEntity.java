@@ -4,6 +4,8 @@ package se.iths.armin.projectmanagerapi.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
+import se.iths.armin.projectmanagerapi.entity.enums.UserStatus;
 
 import java.time.LocalDateTime;
 
