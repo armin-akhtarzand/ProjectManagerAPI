@@ -28,7 +28,7 @@ public class TaskEntity {
     @Column(nullable = false)
     private TaskStatus taskStatus = TaskStatus.TODO;
 
-    @Column(name = "task_created")
+    @Column(name = "task_created", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "task_updated")
     private LocalDateTime updatedAt;
