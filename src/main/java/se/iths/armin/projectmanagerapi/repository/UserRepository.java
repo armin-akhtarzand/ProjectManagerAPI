@@ -6,4 +6,5 @@ import se.iths.armin.projectmanagerapi.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
 }
