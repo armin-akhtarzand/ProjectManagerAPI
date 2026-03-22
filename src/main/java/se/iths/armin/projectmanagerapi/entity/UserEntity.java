@@ -39,7 +39,6 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "user_status")
     private UserStatus userStatus = UserStatus.ACTIVE;
-    @Enumerated(EnumType.STRING)
 
     @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
