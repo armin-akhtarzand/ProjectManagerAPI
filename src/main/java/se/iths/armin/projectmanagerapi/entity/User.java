@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "user_entity")
 @Getter
 @Setter
-public class UserEntity {
+public class User {
 
 
     @Id
@@ -47,7 +47,7 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
-    List<ProjectUserEntity> projectUsers;
+    List<ProjectUser> projectUsers;
 
     @PrePersist
     public void onCreate() {
