@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "comment")
 @Getter
 @Setter
-public class CommentEntity {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,11 @@ public class CommentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = false)
-    private TaskEntity task;
+    private Task task;
 
     @PrePersist
     public void onCreate() {

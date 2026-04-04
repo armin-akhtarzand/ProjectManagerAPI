@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "project")
 @Getter
 @Setter
-public class ProjectEntity {
+public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class ProjectEntity {
     private String description;
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectUserEntity> projectUsers;
+    private List<ProjectUser> projectUsers;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "project_status")

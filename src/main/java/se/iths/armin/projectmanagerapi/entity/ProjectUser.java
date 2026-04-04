@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "project_user")
-public class ProjectUserEntity {
+public class ProjectUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,11 +15,11 @@ public class ProjectUserEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
-    private ProjectEntity project;
+    private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    private User user;
 
     @Column(nullable = false)
     private String role;
