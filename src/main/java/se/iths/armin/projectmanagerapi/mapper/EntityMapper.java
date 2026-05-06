@@ -5,7 +5,7 @@ public interface EntityMapper<Entity, RequestDto, RespondDto> {
 
     Entity toEntity(RequestDto requestDto);
 
-    RequestDto toDto(Entity entity);
+    RespondDto toDto(Entity entity);
 
     void updateEntity(Entity entity, RequestDto requestDto);
 }
