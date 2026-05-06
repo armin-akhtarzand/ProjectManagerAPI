@@ -1,7 +1,7 @@
 package se.iths.armin.projectmanagerapi.entity.enums;
 
 public enum UserPosition {
-    CHIEF,
+    ADMIN,
     MANAGER,
     EMPLOYEE
 }
