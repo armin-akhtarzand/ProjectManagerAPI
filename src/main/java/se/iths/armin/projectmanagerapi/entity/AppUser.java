@@ -46,7 +46,7 @@ public class AppUser {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "appUser")
     List<ProjectUser> projectUsers;
 
     @PrePersist
