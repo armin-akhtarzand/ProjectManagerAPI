@@ -2,13 +2,12 @@ package se.iths.armin.projectmanagerapi.mapper;
 
 import org.springframework.stereotype.Component;
 import se.iths.armin.projectmanagerapi.dto.AppUserRequestDto;
-import se.iths.armin.projectmanagerapi.dto.AppUserRespondDto;
-import se.iths.armin.projectmanagerapi.dto.ChangePasswordDto;
+import se.iths.armin.projectmanagerapi.dto.AppUserResponseDto;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 
 @Component
 public class AppUserMapperImpl
-        implements EntityMapper<AppUser, AppUserRequestDto, AppUserRespondDto> {
+        implements EntityMapper<AppUser, AppUserRequestDto, AppUserResponseDto> {
 
     @Override
     public AppUser toEntity(AppUserRequestDto appUserRequestDto) {
@@ -25,11 +24,11 @@ public class AppUserMapperImpl
     }
 
     @Override
-    public AppUserRespondDto toDto(AppUser appUser) {
+    public AppUserResponseDto toDto(AppUser appUser) {
         if (appUser == null) {
             return null;
         }
-        AppUserRespondDto userRespond = new AppUserRespondDto
+        AppUserResponseDto userRespond = new AppUserResponseDto
                 (appUser.getEmail(), appUser.getFirstname(), appUser.getLastname(), appUser.getUserPosition(), appUser.getUserStatus());
 
         return userRespond;
@@ -43,12 +42,5 @@ public class AppUserMapperImpl
         appUser.setFirstname(appUserRequestDto.firstname());
         appUser.setLastname(appUserRequestDto.lastname());
         appUser.setEmail(appUserRequestDto.email());
-    }
-
-    public void changePassword(AppUser appUser, ChangePasswordDto changePasswordDto) {
-        if (changePasswordDto == null) {
-            return;
-        }
-        appUser.setPassword(changePasswordDto.password());
     }
 }

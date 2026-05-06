@@ -5,5 +5,7 @@ import org.springframework.stereotype.Repository;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 
 @Repository
-public interface UserRepository extends JpaRepository<AppUser, Long> {
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+
+    boolean existsByEmail(String email);
 }
