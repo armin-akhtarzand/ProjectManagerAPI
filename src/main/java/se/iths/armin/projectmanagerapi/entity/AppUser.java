@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "user_entity")
+@Table(name = "appuser")
 @Getter
 @Setter
 public class AppUser {
@@ -23,7 +23,7 @@ public class AppUser {
     private Long userid;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;
     @Column(nullable = false)
     private String password;
 
