@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "user_entity")
 @Getter
 @Setter
-public class User {
+public class AppUser {
 
 
     @Id
