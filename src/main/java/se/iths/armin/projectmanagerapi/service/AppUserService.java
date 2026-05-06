@@ -3,13 +3,14 @@ package se.iths.armin.projectmanagerapi.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import se.iths.armin.projectmanagerapi.dto.AppUserRequestDto;
-import se.iths.armin.projectmanagerapi.dto.AppUserResponseDto;
-import se.iths.armin.projectmanagerapi.dto.ChangePasswordDto;
+import se.iths.armin.projectmanagerapi.dto.*;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
+import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
+import se.iths.armin.projectmanagerapi.entity.enums.UserStatus;
 import se.iths.armin.projectmanagerapi.exception.DuplicateFoundException;
 import se.iths.armin.projectmanagerapi.exception.InvalidPasswordException;
 import se.iths.armin.projectmanagerapi.exception.ResourceNotFoundException;
+import se.iths.armin.projectmanagerapi.exception.UnauthorizedException;
 import se.iths.armin.projectmanagerapi.mapper.EntityMapper;
 import se.iths.armin.projectmanagerapi.repository.AppUserRepository;
 
@@ -19,11 +20,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppUserService {
 
-    private final PasswordEncoder passwordEncoder;
+    private final AuthorizationService authorizationService;
     private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
     private final EntityMapper<AppUser, AppUserRequestDto, AppUserResponseDto> appUserMapper;
 
     public AppUserResponseDto createAppUser(AppUserRequestDto appUserRequestDto) {
+
+        authorizationService.validateAdmin();
+
         if (appUserRepository.existsByEmail(appUserRequestDto.email())) {
             throw new DuplicateFoundException("Email already exists");
         }
@@ -61,6 +66,8 @@ public class AppUserService {
     public AppUserResponseDto updateAppUser(Long id, AppUserRequestDto appUserRequestDto) {
         AppUser appUser = getAppUser(id);
 
+        authorizationService.validateSelfOrAdmin(id);
+
         if (!appUser.getEmail().equals(appUserRequestDto.email())) {
             if (appUserRepository.existsByEmail(appUserRequestDto.email())) {
                 throw new DuplicateFoundException("Email already exists");
@@ -76,13 +83,16 @@ public class AppUserService {
     public void deleteAppUser(Long id) {
         AppUser appUser = getAppUser(id);
 
+        authorizationService.validateAdmin();
+
         appUserRepository.delete(appUser);
     }
 
-    public void changePassword(AppUserRequestDto appUserRequestDto) {
-    }
+    public void changePassword(Long id, ChangePasswordDto changePasswordDto) {
 
-    public void changePassword(String oldPassword, Long id, ChangePasswordDto changePasswordDto) {
+
+        authorizationService.validateSelf(id);
+
         AppUser appUser = getAppUser(id);
         if (!passwordEncoder.matches(changePasswordDto.oldPassword(), appUser.getPassword())) {
             throw new InvalidPasswordException("Old password is not correct");
@@ -91,5 +101,36 @@ public class AppUserService {
 
         appUserRepository.save(appUser);
     }
+
+    public void changeUserPosition(Long id, ChangeAppUserPositionDto changeAppUserPositionDto) {
+        AppUser appUser = getAppUser(id);
+
+        authorizationService.validateAdmin();
+
+        if (appUser.getUserPosition().equals(changeAppUserPositionDto.position())) {
+            throw new DuplicateFoundException("User already has this position");
+        }
+        appUser.setUserPosition(changeAppUserPositionDto.position());
+        appUserRepository.save(appUser);
+    }
+
+    public void changeUserStatus(Long id, ChangeAppUserStatusDto changeAppUserStatusDto) {
+        AppUser appUser = getAppUser(id);
+
+        authorizationService.validateSelfOrAdmin(id);
+
+        boolean isAdmin = authorizationService.getCurrentUser().getUserPosition().equals(UserPosition.ADMIN);
+
+        if (!isAdmin && changeAppUserStatusDto.status().equals(UserStatus.INACTIVE)) {
+            throw new UnauthorizedException("Only admin can set status to INACTIVE");
+        }
+
+        if (appUser.getUserStatus().equals(changeAppUserStatusDto.status())) {
+            throw new DuplicateFoundException("User already has this status");
+        }
+        appUser.setUserStatus(changeAppUserStatusDto.status());
+        appUserRepository.save(appUser);
+    }
+
 
 }
