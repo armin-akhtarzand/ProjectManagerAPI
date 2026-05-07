@@ -20,7 +20,7 @@ public class Project {
     @Column(name = "project_id")
     private Long projectId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 25)
     private String title;
 
     @Column(length = 1000)
