@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi.service;
+package se.iths.armin.projectmanagerapi;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -40,6 +40,16 @@ public class AuthorizationService {
         AppUser currentUser = getCurrentUser();
         boolean isAdmin = currentUser.getUserPosition().equals(UserPosition.ADMIN);
         if (!isAdmin) {
+            throw new UnauthorizedException("You are not allowed to perform this action");
+        }
+    }
+
+    public void validateManagerOrAdmin() {
+        AppUser currentUser = getCurrentUser();
+        boolean isManager = currentUser.getUserPosition().equals(UserPosition.MANAGER);
+        boolean isAdmin = currentUser.getUserPosition().equals(UserPosition.ADMIN);
+
+        if (!isManager && !isAdmin) {
             throw new UnauthorizedException("You are not allowed to perform this action");
         }
     }

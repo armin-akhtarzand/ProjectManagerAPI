@@ -1,6 +1,7 @@
 package se.iths.armin.projectmanagerapi.entity;
 
 import jakarta.persistence.*;
+import se.iths.armin.projectmanagerapi.entity.enums.ProjectRole;
 
 import java.time.LocalDateTime;
 
@@ -22,8 +23,7 @@ public class ProjectUser {
     private AppUser appUser;
 
     @Column(nullable = false)
-    private String role;
-
+    private ProjectRole projectRole = ProjectRole.PROJECT_MEMBER;
     @Column(name = "joined_at", nullable = false)
     private LocalDateTime joinedAt;
 
