@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi;
+package se.iths.armin.projectmanagerapi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -75,7 +75,7 @@ public class ProjectService {
     }
 
     public void changeProjectStatus(Long projectId, ChangeProjectStatusDto changeProjectStatusDto) {
-        
+
         authorizationService.validateManagerOrAdmin();
         Project project = getProject(projectId);
 

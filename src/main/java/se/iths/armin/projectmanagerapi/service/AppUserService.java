@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi;
+package se.iths.armin.projectmanagerapi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
