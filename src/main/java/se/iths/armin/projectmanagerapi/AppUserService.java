@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi.service;
+package se.iths.armin.projectmanagerapi;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,10 +7,7 @@ import se.iths.armin.projectmanagerapi.dto.*;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
 import se.iths.armin.projectmanagerapi.entity.enums.UserStatus;
-import se.iths.armin.projectmanagerapi.exception.DuplicateFoundException;
-import se.iths.armin.projectmanagerapi.exception.InvalidPasswordException;
-import se.iths.armin.projectmanagerapi.exception.ResourceNotFoundException;
-import se.iths.armin.projectmanagerapi.exception.UnauthorizedException;
+import se.iths.armin.projectmanagerapi.exception.*;
 import se.iths.armin.projectmanagerapi.mapper.EntityMapper;
 import se.iths.armin.projectmanagerapi.repository.AppUserRepository;
 
@@ -108,7 +105,7 @@ public class AppUserService {
         authorizationService.validateAdmin();
 
         if (appUser.getUserPosition().equals(changeAppUserPositionDto.position())) {
-            throw new DuplicateFoundException("User already has this position");
+            throw new NoStateChangeException("User already has this position");
         }
         appUser.setUserPosition(changeAppUserPositionDto.position());
         appUserRepository.save(appUser);
@@ -126,7 +123,7 @@ public class AppUserService {
         }
 
         if (appUser.getUserStatus().equals(changeAppUserStatusDto.status())) {
-            throw new DuplicateFoundException("User already has this status");
+            throw new NoStateChangeException("User already has this status");
         }
         appUser.setUserStatus(changeAppUserStatusDto.status());
         appUserRepository.save(appUser);
