@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "user_entity")
+@Table(name = "appuser")
 @Getter
 @Setter
-public class User {
+public class AppUser {
 
 
     @Id
@@ -23,7 +23,7 @@ public class User {
     private Long userid;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;
     @Column(nullable = false)
     private String password;
 
@@ -46,7 +46,7 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "appUser")
     List<ProjectUser> projectUsers;
 
     @PrePersist

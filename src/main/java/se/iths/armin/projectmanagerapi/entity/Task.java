@@ -41,11 +41,11 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignee_id", nullable = false)
-    private User assignee;
+    private AppUser assignee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", nullable = false)
-    private User createdBy;
+    private AppUser createdBy;
 
 
     @PrePersist

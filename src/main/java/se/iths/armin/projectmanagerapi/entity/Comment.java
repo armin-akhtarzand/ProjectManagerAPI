@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "content")
 @Getter
 @Setter
 public class Comment {
@@ -18,14 +18,14 @@ public class Comment {
     private Long commentId;
 
     @Column(nullable = false, length = 1000)
-    private String comment;
+    private String content;
 
     @Column(name = "comment_created", nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private AppUser appUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = false)
