@@ -57,6 +57,7 @@ public class ProjectService {
         return responseDto;
     }
 
+    @Transactional
     public void deleteProjectById(Long projectId) {
         authorizationService.validateAdmin();
 

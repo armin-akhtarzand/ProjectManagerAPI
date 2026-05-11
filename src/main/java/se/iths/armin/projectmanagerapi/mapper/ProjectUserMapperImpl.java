@@ -2,8 +2,10 @@ package se.iths.armin.projectmanagerapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import se.iths.armin.projectmanagerapi.dto.ProjectMemberResponseDto;
 import se.iths.armin.projectmanagerapi.dto.ProjectUserRequestDto;
 import se.iths.armin.projectmanagerapi.dto.ProjectUserResponseDto;
+import se.iths.armin.projectmanagerapi.dto.UserProjectResponseDto;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.ProjectUser;
@@ -43,11 +45,9 @@ public class ProjectUserMapperImpl
         Project project = projectUser.getProject();
         AppUser appUser = projectUser.getAppUser();
 
-        ProjectUserResponseDto responseDto = new ProjectUserResponseDto(
+        return new ProjectUserResponseDto(
                 projectUser.getProjectUserId(), project.getProjectId(), project.getTitle()
                 , appUser.getUserid(), appUser.getFirstname(), appUser.getLastname(), projectUser.getProjectRole(), projectUser.getJoinedAt());
-
-        return responseDto;
 
     }
 
@@ -56,7 +56,26 @@ public class ProjectUserMapperImpl
         if (projectUser == null) {
             return;
         }
+    }
+
+    public ProjectMemberResponseDto toProjectMemberResponseDto(ProjectUser projectUser) {
+        if (projectUser == null) {
+            return null;
+        }
+        AppUser appUser = projectUser.getAppUser();
 
 
+        return new ProjectMemberResponseDto(
+                appUser.getUserid(), appUser.getFirstname(), appUser.getLastname(), projectUser.getProjectRole(), projectUser.getJoinedAt());
+    }
+
+    public UserProjectResponseDto toUserProjectResponseDto(ProjectUser projectUser) {
+        if (projectUser == null) {
+            return null;
+        }
+        Project project = projectUser.getProject();
+
+        return new UserProjectResponseDto(
+                project.getProjectId(), project.getTitle(), project.getProjectStatus(), projectUser.getProjectRole(), projectUser.getJoinedAt());
     }
 }

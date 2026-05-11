@@ -18,7 +18,7 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Long> 
 
     Optional<ProjectUser> findByAppUserAndProject(AppUser appUser, Project project);
 
-    List<ProjectUser> getAllByProject(Project project);
+    List<ProjectUser> findAllByProject(Project project);
 
-    List<ProjectUser> getAllByAppUser(AppUser appUser);
+    List<ProjectUser> findAllByAppUser(AppUser appUser);
 }
