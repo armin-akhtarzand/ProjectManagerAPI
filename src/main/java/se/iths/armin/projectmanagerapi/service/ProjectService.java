@@ -2,6 +2,7 @@ package se.iths.armin.projectmanagerapi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.iths.armin.projectmanagerapi.dto.ChangeProjectStatusDto;
 import se.iths.armin.projectmanagerapi.dto.ProjectRequestDto;
 import se.iths.armin.projectmanagerapi.dto.ProjectResponseDto;
@@ -23,6 +24,7 @@ public class ProjectService {
     private final ProjectMapperImpl projectMapper;
 
 
+    @Transactional
     public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) {
 
         authorizationService.validateAdmin();
@@ -33,6 +35,7 @@ public class ProjectService {
         return projectMapper.toDto(project);
     }
 
+    @Transactional
     public ProjectResponseDto updateProject(ProjectRequestDto projectRequestDto, Long projectId) {
 
         authorizationService.validateManagerOrAdmin();
