@@ -1,8 +1,10 @@
 package se.iths.armin.projectmanagerapi.service;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.iths.armin.projectmanagerapi.dto.*;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
@@ -22,6 +24,7 @@ public class AppUserService {
     private final PasswordEncoder passwordEncoder;
     private final EntityMapper<AppUser, AppUserRequestDto, AppUserResponseDto> appUserMapper;
 
+    @Transactional
     public AppUserResponseDto createAppUser(AppUserRequestDto appUserRequestDto) {
 
         authorizationService.validateAdmin();
@@ -60,6 +63,7 @@ public class AppUserService {
         return appUser;
     }
 
+    @Transactional
     public AppUserResponseDto updateAppUser(Long id, AppUserRequestDto appUserRequestDto) {
         AppUser appUser = getAppUser(id);
 
