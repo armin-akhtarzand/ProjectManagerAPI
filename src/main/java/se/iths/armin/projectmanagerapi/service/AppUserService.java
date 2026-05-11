@@ -56,7 +56,7 @@ public class AppUserService {
         return appUserResponseDto;
     }
 
-    private AppUser getAppUser(Long id) {
+    public AppUser getAppUser(Long id) {
         AppUser appUser = appUserRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
