@@ -56,7 +56,7 @@ public class AppUserService {
         return appUserResponseDto;
     }
 
-    private AppUser getAppUser(Long id) {
+    public AppUser getAppUser(Long id) {
         AppUser appUser = appUserRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -81,6 +81,7 @@ public class AppUserService {
         return appUserMapper.toDto(saved);
     }
 
+    @Transactional
     public void deleteAppUser(Long id) {
         AppUser appUser = getAppUser(id);
 
@@ -89,6 +90,7 @@ public class AppUserService {
         appUserRepository.delete(appUser);
     }
 
+    @Transactional
     public void changePassword(Long id, ChangePasswordDto changePasswordDto) {
 
 
@@ -103,6 +105,7 @@ public class AppUserService {
         appUserRepository.save(appUser);
     }
 
+    @Transactional
     public void changeUserPosition(Long id, ChangeAppUserPositionDto changeAppUserPositionDto) {
         AppUser appUser = getAppUser(id);
 
@@ -115,6 +118,7 @@ public class AppUserService {
         appUserRepository.save(appUser);
     }
 
+    @Transactional
     public void changeUserStatus(Long id, ChangeAppUserStatusDto changeAppUserStatusDto) {
         AppUser appUser = getAppUser(id);
 
