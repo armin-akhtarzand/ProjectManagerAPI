@@ -2,6 +2,7 @@ package se.iths.armin.projectmanagerapi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.iths.armin.projectmanagerapi.dto.task.*;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
@@ -26,6 +27,7 @@ public class TaskService {
     private final ProjectUserRepository projectUserRepository;
 
 
+    @Transactional
     public TaskResponseDto createTask(TaskRequestDto taskRequestDto, Long projectId) {
 
         authorizationService.validateProjectManagerOrAdmin(projectId);
@@ -61,6 +63,7 @@ public class TaskService {
         return projectTasks.stream().map(taskMapper::toDto).toList();
     }
 
+    @Transactional
     public TaskResponseDto updateTask(Long taskId, TaskUpdateDto taskUpdateDto) {
         Task task = getTask(taskId);
         authorizationService.validateProjectManagerOrAdmin(task.getProject().getProjectId());
@@ -70,6 +73,7 @@ public class TaskService {
         return taskMapper.toDto(taskRepository.save(task));
     }
 
+    @Transactional
     public void deleteTask(Long taskId) {
 
         Task task = getTask(taskId);
@@ -78,6 +82,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
+    @Transactional
     public void updateTaskStatus(Long userId, Long taskId,
                                  ChangeTaskStatusDto changeTaskStatusDto) {
 
@@ -91,6 +96,7 @@ public class TaskService {
         taskRepository.save(task);
     }
 
+    @Transactional
     public void changeTaskAssignee(ChangeTaskAssigneeDto changeTaskAssigneeDto, Long taskId) {
         Task task = getTask(taskId);
         authorizationService.validateProjectManagerOrAdmin(task.getProject().getProjectId());
