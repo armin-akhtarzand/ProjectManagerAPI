@@ -52,8 +52,6 @@ public class CommentService {
     public List<CommentResponseDto> findAllByTask(Long taskId) {
         Task task = taskService.getTask(taskId);
 
-        AppUser currentUser = authorizationService.getCurrentUser();
-
         List<Comment> comments = commentRepository.findAllByTask(task);
 
         return comments.stream()
