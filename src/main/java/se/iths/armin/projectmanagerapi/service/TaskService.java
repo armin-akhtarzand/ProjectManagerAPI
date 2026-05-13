@@ -2,7 +2,7 @@ package se.iths.armin.projectmanagerapi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import se.iths.armin.projectmanagerapi.dto.*;
+import se.iths.armin.projectmanagerapi.dto.task.*;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.Task;

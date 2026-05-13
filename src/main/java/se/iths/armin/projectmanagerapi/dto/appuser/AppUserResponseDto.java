@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi.dto;
+package se.iths.armin.projectmanagerapi.dto.appuser;
 
 import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
 import se.iths.armin.projectmanagerapi.entity.enums.UserStatus;

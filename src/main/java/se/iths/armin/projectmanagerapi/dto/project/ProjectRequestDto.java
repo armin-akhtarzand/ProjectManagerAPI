@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi.dto;
+package se.iths.armin.projectmanagerapi.dto.project;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;

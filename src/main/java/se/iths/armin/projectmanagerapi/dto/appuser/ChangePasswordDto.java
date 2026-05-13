@@ -1,4 +1,4 @@
-package se.iths.armin.projectmanagerapi.dto;
+package se.iths.armin.projectmanagerapi.dto.appuser;
 
 import jakarta.validation.constraints.NotBlank;
 

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import se.iths.armin.projectmanagerapi.dto.*;
+import se.iths.armin.projectmanagerapi.dto.appuser.*;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
 import se.iths.armin.projectmanagerapi.entity.enums.UserStatus;
