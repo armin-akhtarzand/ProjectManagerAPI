@@ -30,22 +30,22 @@ public class ProjectService {
         authorizationService.validateAdmin();
 
         Project project = projectMapper.toEntity(projectRequestDto);
-        project = projectRepository.save(project);
+        Project saved = projectRepository.save(project);
 
-        return projectMapper.toDto(project);
+        return projectMapper.toDto(saved);
     }
 
     @Transactional
     public ProjectResponseDto updateProject(ProjectRequestDto projectRequestDto, Long projectId) {
 
-        authorizationService.validateManagerOrAdmin();
+        authorizationService.validateProjectManagerOrAdmin(projectId);
         Project project = getProject(projectId);
 
         projectMapper.updateEntity(project, projectRequestDto);
 
-        project = projectRepository.save(project);
+        Project updated = projectRepository.save(project);
 
-        return projectMapper.toDto(project);
+        return projectMapper.toDto(updated);
     }
 
     public ProjectResponseDto findProjectById(long projectId) {
@@ -80,7 +80,7 @@ public class ProjectService {
 
     public void changeProjectStatus(Long projectId, ChangeProjectStatusDto changeProjectStatusDto) {
 
-        authorizationService.validateManagerOrAdmin();
+        authorizationService.validateProjectManagerOrAdmin(projectId);
         Project project = getProject(projectId);
 
         if (project.getProjectStatus().equals(changeProjectStatusDto.status())) {

@@ -51,13 +51,6 @@ public class ProjectUserMapperImpl
 
     }
 
-    @Override
-    public void updateEntity(ProjectUser projectUser, ProjectUserRequestDto projectUserRequestDto) {
-        if (projectUser == null) {
-            return;
-        }
-    }
-
     public ProjectMemberResponseDto toProjectMemberResponseDto(ProjectUser projectUser) {
         if (projectUser == null) {
             return null;

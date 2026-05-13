@@ -10,7 +10,7 @@ import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
 import se.iths.armin.projectmanagerapi.entity.enums.UserStatus;
 import se.iths.armin.projectmanagerapi.exception.*;
-import se.iths.armin.projectmanagerapi.mapper.EntityMapper;
+import se.iths.armin.projectmanagerapi.mapper.AppUserMapperImpl;
 import se.iths.armin.projectmanagerapi.repository.AppUserRepository;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class AppUserService {
     private final AuthorizationService authorizationService;
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EntityMapper<AppUser, AppUserRequestDto, AppUserResponseDto> appUserMapper;
+    private final AppUserMapperImpl appUserMapper;
 
     @Transactional
     public AppUserResponseDto createAppUser(AppUserRequestDto appUserRequestDto) {

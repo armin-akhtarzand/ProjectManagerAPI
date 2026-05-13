@@ -25,16 +25,15 @@ public class ProjectUserService {
 
     private final ProjectUserRepository projectUserRepository;
     private final AuthorizationService authorizationService;
-    private final ProjectUserMapperImpl projectUserMapperImpl;
+    private final ProjectUserMapperImpl projectUserMapper;
     private final AppUserService appUserService;
     private final ProjectService projectService;
 
     @Transactional
     public ProjectUserResponseDto addUserToProject(ProjectUserRequestDto projectUserRequestDto) {
+        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
 
-        authorizationService.validateManagerOrAdmin();
-
-        ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
+        ProjectUser projectUser = projectUserMapper.toEntity(projectUserRequestDto);
 
 
         boolean isMember = projectUserRepository.existsByAppUserAndProject(projectUser.getAppUser(), projectUser.getProject());
@@ -45,32 +44,34 @@ public class ProjectUserService {
 
         ProjectUser saved = projectUserRepository.save(projectUser);
 
-        return projectUserMapperImpl.toDto(saved);
+        return projectUserMapper.toDto(saved);
     }
 
     @Transactional
     public void removeUserFromProject(ProjectUserRequestDto projectUserRequestDto) {
 
-        authorizationService.validateManagerOrAdmin();
-        ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
+
+        ProjectUser projectUser = projectUserMapper.toEntity(projectUserRequestDto);
+
         ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
+        authorizationService.validateProjectManagerOrAdmin(existingProjectUser.getProject().getProjectId());
 
 
         projectUserRepository.delete(existingProjectUser);
     }
 
     public ProjectUserResponseDto getUserFromProject(ProjectUserRequestDto projectUserRequestDto) {
-        authorizationService.validateManagerOrAdmin();
-        ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
+        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
+        ProjectUser projectUser = projectUserMapper.toEntity(projectUserRequestDto);
         ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
 
-        return projectUserMapperImpl.toDto(existingProjectUser);
+        return projectUserMapper.toDto(existingProjectUser);
     }
 
     @Transactional
     public void changeProjectRole(ProjectUserRequestDto projectUserRequestDto, ProjectRole newRole) {
-        authorizationService.validateManagerOrAdmin();
-        ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
+        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
+        ProjectUser projectUser = projectUserMapper.toEntity(projectUserRequestDto);
         ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
 
 
@@ -95,7 +96,7 @@ public class ProjectUserService {
         List<ProjectUser> appUsersFromProject = projectUserRepository.findAllByProject(project);
 
         return appUsersFromProject.stream()
-                .map(projectUserMapperImpl::toProjectMemberResponseDto)
+                .map(projectUserMapper::toProjectMemberResponseDto)
                 .toList();
     }
 
@@ -106,7 +107,7 @@ public class ProjectUserService {
         List<ProjectUser> projectsFromAppUser = projectUserRepository.findAllByAppUser(appUser);
 
         return projectsFromAppUser.stream()
-                .map(projectUserMapperImpl::toUserProjectResponseDto)
+                .map(projectUserMapper::toUserProjectResponseDto)
                 .toList();
     }
 

@@ -34,7 +34,6 @@ public class AppUserMapperImpl
         return userRespond;
     }
 
-    @Override
     public void updateEntity(AppUser appUser, AppUserRequestDto appUserRequestDto) {
         if (appUserRequestDto == null) {
             return;

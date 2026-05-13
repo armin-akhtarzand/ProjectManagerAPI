@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.ProjectUser;
+import se.iths.armin.projectmanagerapi.entity.enums.ProjectRole;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Long> 
     List<ProjectUser> findAllByProject(Project project);
 
     List<ProjectUser> findAllByAppUser(AppUser appUser);
+
+    boolean existsByAppUserAndProjectAndProjectRole(AppUser appUser, Project project, ProjectRole projectRole);
 }
