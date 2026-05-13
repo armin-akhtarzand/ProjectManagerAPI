@@ -1,8 +1,8 @@
 package se.iths.armin.projectmanagerapi.mapper;
 
 import org.springframework.stereotype.Component;
-import se.iths.armin.projectmanagerapi.dto.AppUserRequestDto;
-import se.iths.armin.projectmanagerapi.dto.AppUserResponseDto;
+import se.iths.armin.projectmanagerapi.dto.appuser.AppUserRequestDto;
+import se.iths.armin.projectmanagerapi.dto.appuser.AppUserResponseDto;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 
 @Component

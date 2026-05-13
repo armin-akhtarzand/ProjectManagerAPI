@@ -2,10 +2,10 @@ package se.iths.armin.projectmanagerapi.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import se.iths.armin.projectmanagerapi.dto.ProjectMemberResponseDto;
-import se.iths.armin.projectmanagerapi.dto.ProjectUserRequestDto;
-import se.iths.armin.projectmanagerapi.dto.ProjectUserResponseDto;
-import se.iths.armin.projectmanagerapi.dto.UserProjectResponseDto;
+import se.iths.armin.projectmanagerapi.dto.projectuser.ProjectMemberResponseDto;
+import se.iths.armin.projectmanagerapi.dto.projectuser.ProjectUserRequestDto;
+import se.iths.armin.projectmanagerapi.dto.projectuser.ProjectUserResponseDto;
+import se.iths.armin.projectmanagerapi.dto.projectuser.UserProjectResponseDto;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.ProjectUser;
