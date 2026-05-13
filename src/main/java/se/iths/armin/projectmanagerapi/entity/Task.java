@@ -19,7 +19,7 @@ public class Task {
     @Column(name = "task_id")
     private Long taskId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 25)
     private String title;
     @Column(length = 1000)
     private String description;
