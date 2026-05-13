@@ -30,9 +30,9 @@ public class ProjectService {
         authorizationService.validateAdmin();
 
         Project project = projectMapper.toEntity(projectRequestDto);
-        project = projectRepository.save(project);
+        Project saved = projectRepository.save(project);
 
-        return projectMapper.toDto(project);
+        return projectMapper.toDto(saved);
     }
 
     @Transactional
@@ -43,9 +43,9 @@ public class ProjectService {
 
         projectMapper.updateEntity(project, projectRequestDto);
 
-        project = projectRepository.save(project);
+        Project updated = projectRepository.save(project);
 
-        return projectMapper.toDto(project);
+        return projectMapper.toDto(updated);
     }
 
     public ProjectResponseDto findProjectById(long projectId) {
