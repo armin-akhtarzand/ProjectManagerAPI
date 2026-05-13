@@ -50,7 +50,7 @@ public class AuthorizationService {
         }
     }
 
-    public void validateManagerOrAdmin(Long projectId) {
+    public void validateProjectManagerOrAdmin(Long projectId) {
         AppUser currentUser = getCurrentUser();
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found"));

@@ -31,8 +31,7 @@ public class ProjectUserService {
 
     @Transactional
     public ProjectUserResponseDto addUserToProject(ProjectUserRequestDto projectUserRequestDto) {
-
-        authorizationService.validateManagerOrAdmin();
+        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
 
         ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
 
@@ -51,16 +50,18 @@ public class ProjectUserService {
     @Transactional
     public void removeUserFromProject(ProjectUserRequestDto projectUserRequestDto) {
 
-        authorizationService.validateManagerOrAdmin();
+
         ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
+
         ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
+        authorizationService.validateProjectManagerOrAdmin(existingProjectUser.getProject().getProjectId());
 
 
         projectUserRepository.delete(existingProjectUser);
     }
 
     public ProjectUserResponseDto getUserFromProject(ProjectUserRequestDto projectUserRequestDto) {
-        authorizationService.validateManagerOrAdmin();
+        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
         ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
         ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
 
@@ -69,7 +70,7 @@ public class ProjectUserService {
 
     @Transactional
     public void changeProjectRole(ProjectUserRequestDto projectUserRequestDto, ProjectRole newRole) {
-        authorizationService.validateManagerOrAdmin();
+        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
         ProjectUser projectUser = projectUserMapperImpl.toEntity(projectUserRequestDto);
         ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
 

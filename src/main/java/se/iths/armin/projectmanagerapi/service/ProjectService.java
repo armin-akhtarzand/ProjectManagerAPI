@@ -38,7 +38,7 @@ public class ProjectService {
     @Transactional
     public ProjectResponseDto updateProject(ProjectRequestDto projectRequestDto, Long projectId) {
 
-        authorizationService.validateManagerOrAdmin();
+        authorizationService.validateProjectManagerOrAdmin(projectId);
         Project project = getProject(projectId);
 
         projectMapper.updateEntity(project, projectRequestDto);
@@ -80,7 +80,7 @@ public class ProjectService {
 
     public void changeProjectStatus(Long projectId, ChangeProjectStatusDto changeProjectStatusDto) {
 
-        authorizationService.validateManagerOrAdmin();
+        authorizationService.validateProjectManagerOrAdmin(projectId);
         Project project = getProject(projectId);
 
         if (project.getProjectStatus().equals(changeProjectStatusDto.status())) {
