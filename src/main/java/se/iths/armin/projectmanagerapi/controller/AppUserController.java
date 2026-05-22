@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.iths.armin.projectmanagerapi.dto.appuser.AppUserRequestDto;
 import se.iths.armin.projectmanagerapi.dto.appuser.AppUserResponseDto;
+import se.iths.armin.projectmanagerapi.dto.appuser.ChangePasswordDto;
 import se.iths.armin.projectmanagerapi.service.AppUserService;
 
 import java.util.List;
@@ -30,10 +31,6 @@ public class AppUserController {
     public ResponseEntity<?> findById(@PathVariable Long id) {
         AppUserResponseDto user = appUserService.findById(id);
 
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
@@ -48,23 +45,24 @@ public class AppUserController {
     public ResponseEntity<?> update(@RequestBody @Valid AppUserRequestDto appUserRequestDto,
                                     @PathVariable Long id) {
 
-        AppUserResponseDto existingUser = appUserService.findById(id);
-
-        if (existingUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
-
         AppUserResponseDto updatedUser = appUserService.updateAppUser(id, appUserRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
+    @PatchMapping("/update/password/{id}")
+    public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto,
+                                            @PathVariable Long id) {
+        AppUserResponseDto existingUser = appUserService.findById(id);
+
+        appUserService.changePassword(id, changePasswordDto);
+
+        return ResponseEntity.ok().build();
+
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        AppUserResponseDto existingUser = appUserService.findById(id);
-        if (existingUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
 
         appUserService.deleteAppUser(id);
 
