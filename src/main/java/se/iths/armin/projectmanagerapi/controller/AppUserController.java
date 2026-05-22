@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.iths.armin.projectmanagerapi.dto.appuser.AppUserRequestDto;
-import se.iths.armin.projectmanagerapi.dto.appuser.AppUserResponseDto;
-import se.iths.armin.projectmanagerapi.dto.appuser.ChangePasswordDto;
+import se.iths.armin.projectmanagerapi.dto.appuser.*;
 import se.iths.armin.projectmanagerapi.service.AppUserService;
 
 import java.util.List;
@@ -53,13 +51,30 @@ public class AppUserController {
     @PatchMapping("/update/password/{id}")
     public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto,
                                             @PathVariable Long id) {
-        AppUserResponseDto existingUser = appUserService.findById(id);
 
         appUserService.changePassword(id, changePasswordDto);
 
         return ResponseEntity.ok().build();
 
     }
+
+    @PatchMapping("/update/status/{id}")
+    public ResponseEntity<?> changeStatus(@RequestBody @Valid ChangeAppUserStatusDto changeAppUserStatusDto,
+                                          @PathVariable Long id) {
+        appUserService.changeUserStatus(id, changeAppUserStatusDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/update/position/{id}")
+    public ResponseEntity<?> changePosition(@RequestBody @Valid ChangeAppUserPositionDto changeAppUserPositionDto,
+                                            @PathVariable Long id) {
+
+        appUserService.changeUserPosition(id, changeAppUserPositionDto);
+        
+        return ResponseEntity.ok().build();
+    }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
