@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/appusers")
+@RequestMapping("/users")
 public class AppUserController {
 
     private final AppUserService appUserService;
@@ -26,31 +26,31 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
+    public ResponseEntity<AppUserResponseDto> findById(@PathVariable Long id) {
         AppUserResponseDto user = appUserService.findById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createAppUser(@RequestBody @Valid AppUserRequestDto appUserRequestDto) {
+    public ResponseEntity<AppUserResponseDto> createAppUser(@RequestBody @Valid AppUserRequestDto appUserRequestDto) {
         AppUserResponseDto user = appUserService.createAppUser(appUserRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody @Valid AppUserUpdateDto appUserUpdateDto,
-                                    @PathVariable Long id) {
+    @PutMapping("/{id}")
+    public ResponseEntity<AppUserResponseDto> update(@RequestBody @Valid AppUserUpdateDto appUserUpdateDto,
+                                                     @PathVariable Long id) {
 
         AppUserResponseDto updatedUser = appUserService.updateAppUser(id, appUserUpdateDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
-    @PatchMapping("/update/password/{id}")
-    public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto,
-                                            @PathVariable Long id) {
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<Void> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto,
+                                               @PathVariable Long id) {
 
         appUserService.changePassword(id, changePasswordDto);
 
@@ -58,26 +58,26 @@ public class AppUserController {
 
     }
 
-    @PatchMapping("/update/status/{id}")
-    public ResponseEntity<?> changeStatus(@RequestBody @Valid ChangeAppUserStatusDto changeAppUserStatusDto,
-                                          @PathVariable Long id) {
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> changeStatus(@RequestBody @Valid ChangeAppUserStatusDto changeAppUserStatusDto,
+                                             @PathVariable Long id) {
         appUserService.changeUserStatus(id, changeAppUserStatusDto);
 
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/update/position/{id}")
-    public ResponseEntity<?> changePosition(@RequestBody @Valid ChangeAppUserPositionDto changeAppUserPositionDto,
-                                            @PathVariable Long id) {
+    @PatchMapping("/{id}/position")
+    public ResponseEntity<Void> changePosition(@RequestBody @Valid ChangeAppUserPositionDto changeAppUserPositionDto,
+                                               @PathVariable Long id) {
 
         appUserService.changeUserPosition(id, changeAppUserPositionDto);
-        
+
         return ResponseEntity.ok().build();
     }
 
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         appUserService.deleteAppUser(id);
 
