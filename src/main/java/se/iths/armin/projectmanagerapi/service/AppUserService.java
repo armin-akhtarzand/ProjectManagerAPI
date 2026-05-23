@@ -64,17 +64,17 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUserResponseDto updateAppUser(Long id, AppUserRequestDto appUserRequestDto) {
+    public AppUserResponseDto updateAppUser(Long id, AppUserUpdateDto appUserUpdateDto) {
         AppUser appUser = getAppUser(id);
 
         authorizationService.validateSelfOrAdmin(id);
 
-        if (!appUser.getEmail().equals(appUserRequestDto.email())) {
-            if (appUserRepository.existsByEmail(appUserRequestDto.email())) {
+        if (!appUser.getEmail().equals(appUserUpdateDto.email())) {
+            if (appUserRepository.existsByEmail(appUserUpdateDto.email())) {
                 throw new DuplicateFoundException("Email already exists");
             }
         }
-        appUserMapper.updateEntity(appUser, appUserRequestDto);
+        appUserMapper.updateEntity(appUser, appUserUpdateDto);
 
         AppUser saved = appUserRepository.save(appUser);
 
@@ -98,7 +98,7 @@ public class AppUserService {
 
         AppUser appUser = getAppUser(id);
         if (!passwordEncoder.matches(changePasswordDto.oldPassword(), appUser.getPassword())) {
-            throw new InvalidPasswordException("Old password is not correct");
+            throw new InvalidPasswordException("Invalid credentials");
         }
         appUser.setPassword(passwordEncoder.encode(changePasswordDto.newPassword()));
 
@@ -127,7 +127,7 @@ public class AppUserService {
         boolean isAdmin = authorizationService.getCurrentUser().getUserPosition().equals(UserPosition.ADMIN);
 
         if (!isAdmin && changeAppUserStatusDto.status().equals(UserStatus.INACTIVE)) {
-            throw new UnauthorizedException("Only admin can set status to INACTIVE");
+            throw new ForbiddenRequestException("Only admin can set status to INACTIVE");
         }
 
         if (appUser.getUserStatus().equals(changeAppUserStatusDto.status())) {
