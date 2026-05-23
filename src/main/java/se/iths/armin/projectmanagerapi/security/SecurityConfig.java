@@ -8,20 +8,15 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.util.StringUtils;
 
 import java.security.KeyFactory;
@@ -61,27 +56,27 @@ public class SecurityConfig {
         this.jwtKeyId = jwtKeyId;
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/appusers/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/appusers/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/appusers/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/appusers/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/auth/login", "/auth/jwks").permitAll()
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
-                        jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(
+//            HttpSecurity http,
+//            JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
+//        http
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .sessionManagement(session ->
+//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/error").permitAll()
+//                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/appusers/register").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/appusers/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+//                        .requestMatchers(HttpMethod.PUT, "/appusers/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+//                        .requestMatchers(HttpMethod.DELETE, "/appusers/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+//                        .requestMatchers("/auth/login", "/auth/jwks").permitAll()
+//                        .anyRequest().authenticated())
+//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
+//                        jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+//        return http.build();
+//    }
 
     @Bean
     public KeyPair keyPair() throws Exception {
