@@ -40,10 +40,10 @@ public class AppUserController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody @Valid AppUserRequestDto appUserRequestDto,
+    public ResponseEntity<?> update(@RequestBody @Valid AppUserUpdateDto appUserUpdateDto,
                                     @PathVariable Long id) {
 
-        AppUserResponseDto updatedUser = appUserService.updateAppUser(id, appUserRequestDto);
+        AppUserResponseDto updatedUser = appUserService.updateAppUser(id, appUserUpdateDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
