@@ -98,7 +98,7 @@ public class AppUserService {
 
         AppUser appUser = getAppUser(id);
         if (!passwordEncoder.matches(changePasswordDto.oldPassword(), appUser.getPassword())) {
-            throw new InvalidPasswordException("Old password is not correct");
+            throw new InvalidPasswordException("Invalid credentials");
         }
         appUser.setPassword(passwordEncoder.encode(changePasswordDto.newPassword()));
 
