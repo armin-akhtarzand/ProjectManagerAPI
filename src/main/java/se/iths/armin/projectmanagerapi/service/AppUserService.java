@@ -127,7 +127,7 @@ public class AppUserService {
         boolean isAdmin = authorizationService.getCurrentUser().getUserPosition().equals(UserPosition.ADMIN);
 
         if (!isAdmin && changeAppUserStatusDto.status().equals(UserStatus.INACTIVE)) {
-            throw new UnauthorizedException("Only admin can set status to INACTIVE");
+            throw new ForbiddenRequestException("Only admin can set status to INACTIVE");
         }
 
         if (appUser.getUserStatus().equals(changeAppUserStatusDto.status())) {

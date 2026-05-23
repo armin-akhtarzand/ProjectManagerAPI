@@ -8,8 +8,8 @@ import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.enums.ProjectRole;
 import se.iths.armin.projectmanagerapi.entity.enums.UserPosition;
+import se.iths.armin.projectmanagerapi.exception.ForbiddenRequestException;
 import se.iths.armin.projectmanagerapi.exception.ResourceNotFoundException;
-import se.iths.armin.projectmanagerapi.exception.UnauthorizedException;
 import se.iths.armin.projectmanagerapi.repository.AppUserRepository;
 import se.iths.armin.projectmanagerapi.repository.ProjectRepository;
 import se.iths.armin.projectmanagerapi.repository.ProjectUserRepository;
@@ -37,7 +37,7 @@ public class AuthorizationService {
         boolean isSelf = currentUser.getUserid().equals(id);
         boolean isAdmin = currentUser.getUserPosition().equals(UserPosition.ADMIN);
         if (!isSelf && !isAdmin) {
-            throw new UnauthorizedException("You are not allowed to perform this action");
+            throw new ForbiddenRequestException("You are not allowed to perform this action");
         }
     }
 
@@ -46,7 +46,7 @@ public class AuthorizationService {
         AppUser currentUser = getCurrentUser();
         boolean isAdmin = currentUser.getUserPosition().equals(UserPosition.ADMIN);
         if (!isAdmin) {
-            throw new UnauthorizedException("You are not allowed to perform this action");
+            throw new ForbiddenRequestException("You are not allowed to perform this action");
         }
     }
 
@@ -60,7 +60,7 @@ public class AuthorizationService {
         boolean isAdmin = currentUser.getUserPosition().equals(UserPosition.ADMIN);
 
         if (!isProjectManager && !isAdmin) {
-            throw new UnauthorizedException("You are not allowed to perform this action");
+            throw new ForbiddenRequestException("You are not allowed to perform this action");
         }
     }
 
@@ -69,7 +69,7 @@ public class AuthorizationService {
         boolean isSelf = currentUser.getUserid().equals(id);
 
         if (!isSelf) {
-            throw new UnauthorizedException("You are not allowed to perform this action");
+            throw new ForbiddenRequestException("You are not allowed to perform this action");
         }
     }
 
@@ -86,7 +86,7 @@ public class AuthorizationService {
                 .existsByAppUserAndProjectAndProjectRole(currentUser, project, ProjectRole.PROJECT_MANAGER);
 
         if (!isSelf && !isAdmin && !isProjectManager) {
-            throw new UnauthorizedException("You are not allowed to perform this action");
+            throw new ForbiddenRequestException("You are not allowed to perform this action");
         }
     }
 
