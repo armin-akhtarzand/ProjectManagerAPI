@@ -70,11 +70,14 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/appusers").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/appusers/create").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/appusers/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/appusers/*/position").hasRole("ADMIN")
+                        .requestMatchers("/auth/login", "/auth/jwks").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/appusers/create").hasRole("ADMIN")
-
-                        .requestMatchers("/auth/login", "/auth/jwks").permitAll()
+                        .requestMatchers("/appusers/**").authenticated()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                         jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
