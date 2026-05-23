@@ -3,6 +3,7 @@ package se.iths.armin.projectmanagerapi.mapper;
 import org.springframework.stereotype.Component;
 import se.iths.armin.projectmanagerapi.dto.appuser.AppUserRequestDto;
 import se.iths.armin.projectmanagerapi.dto.appuser.AppUserResponseDto;
+import se.iths.armin.projectmanagerapi.dto.appuser.AppUserUpdateDto;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 
 @Component
@@ -34,7 +35,7 @@ public class AppUserMapperImpl
         return userRespond;
     }
 
-    public void updateEntity(AppUser appUser, AppUserRequestDto appUserRequestDto) {
+    public void updateEntity(AppUser appUser, AppUserUpdateDto appUserRequestDto) {
         if (appUserRequestDto == null) {
             return;
         }

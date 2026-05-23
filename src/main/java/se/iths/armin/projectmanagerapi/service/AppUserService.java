@@ -64,17 +64,17 @@ public class AppUserService {
     }
 
     @Transactional
-    public AppUserResponseDto updateAppUser(Long id, AppUserRequestDto appUserRequestDto) {
+    public AppUserResponseDto updateAppUser(Long id, AppUserUpdateDto appUserUpdateDto) {
         AppUser appUser = getAppUser(id);
 
         authorizationService.validateSelfOrAdmin(id);
 
-        if (!appUser.getEmail().equals(appUserRequestDto.email())) {
-            if (appUserRepository.existsByEmail(appUserRequestDto.email())) {
+        if (!appUser.getEmail().equals(appUserUpdateDto.email())) {
+            if (appUserRepository.existsByEmail(appUserUpdateDto.email())) {
                 throw new DuplicateFoundException("Email already exists");
             }
         }
-        appUserMapper.updateEntity(appUser, appUserRequestDto);
+        appUserMapper.updateEntity(appUser, appUserUpdateDto);
 
         AppUser saved = appUserRepository.save(appUser);
 
