@@ -32,7 +32,7 @@ public class AppUserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<AppUserResponseDto> createAppUser(@RequestBody @Valid AppUserRequestDto appUserRequestDto) {
         AppUserResponseDto user = appUserService.createAppUser(appUserRequestDto);
 
