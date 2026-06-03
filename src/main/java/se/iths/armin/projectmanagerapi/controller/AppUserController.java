@@ -54,7 +54,7 @@ public class AppUserController {
 
         appUserService.changePassword(id, changePasswordDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
 
     }
 
@@ -63,7 +63,7 @@ public class AppUserController {
                                              @PathVariable Long id) {
         appUserService.changeUserStatus(id, changeAppUserStatusDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/position")
@@ -72,7 +72,7 @@ public class AppUserController {
 
         appUserService.changeUserPosition(id, changeAppUserPositionDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 
