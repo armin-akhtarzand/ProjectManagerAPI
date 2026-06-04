@@ -84,6 +84,7 @@ class AppUserServiceTest {
         assertNotNull(result);
         assertEquals(appUser.getFirstname(), result.firstname());
         assertEquals(responseDto, result);
+        verify(authorizationService).validateAdmin();
     }
 
     @Test
@@ -110,6 +111,7 @@ class AppUserServiceTest {
         verify(appUserRepository).findById(1L);
         verify(appUserRepository).existsByEmail("example@example.com");
         verify(appUserRepository).save(appUser);
+        verify(authorizationService).validateSelfOrAdmin(1L);
     }
 
     @Test
@@ -122,6 +124,7 @@ class AppUserServiceTest {
 
         Mockito.verify(appUserRepository).delete(Mockito.any(AppUser.class));
         verify(appUserRepository).findById(1L);
+        verify(authorizationService).validateAdmin();
     }
 
     @Test
@@ -177,6 +180,7 @@ class AppUserServiceTest {
         Mockito.verify(appUserRepository).findById(1L);
         Mockito.verify(appUserRepository).save(Mockito.any(AppUser.class));
         assertEquals("newpassword", appUser.getPassword());
+        verify(authorizationService).validateSelf(1L);
 
 
     }
@@ -193,6 +197,7 @@ class AppUserServiceTest {
         Mockito.verify(appUserRepository).findById(1L);
         Mockito.verify(appUserRepository).save(Mockito.any(AppUser.class));
         assertEquals(UserPosition.ADMIN, appUser.getUserPosition());
+        verify(authorizationService).validateAdmin();
 
     }
 
@@ -210,6 +215,7 @@ class AppUserServiceTest {
         Mockito.verify(appUserRepository).findById(1L);
         Mockito.verify(appUserRepository).save(Mockito.any(AppUser.class));
         assertEquals(UserStatus.VACATION, appUser.getUserStatus());
+        verify(authorizationService).validateSelfOrAdmin(1L);
     }
 
 
