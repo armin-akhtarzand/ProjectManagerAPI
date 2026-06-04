@@ -31,7 +31,7 @@ public class AppUserControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void getAllAppUsersShouldReturn200() throws Exception {
+    void getAllAppUsers_WhenValidRequest_ShouldReturn200() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk());
 
@@ -39,7 +39,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void findByIdShouldReturn200() throws Exception {
+    void findById_WhenValidRequest_ShouldReturn200() throws Exception {
         mockMvc.perform(get("/users/1"))
                 .andExpect(status().isOk());
 
@@ -47,7 +47,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void findByIdNotFoundShouldReturn404() throws Exception {
+    void findById_WhenNotFound_ShouldReturn404() throws Exception {
         doThrow(ResourceNotFoundException.class).when(appUserService).findById(eq(1L));
 
         mockMvc.perform(get("/users/1"))
@@ -57,7 +57,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void createAppUserShouldReturn201() throws Exception {
+    void createAppUser_WhenValidRequest_ShouldReturn201() throws Exception {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -70,13 +70,12 @@ public class AppUserControllerTest {
                                 """)))
                 .andExpect(status().isCreated());
 
-
         verify(appUserService).createAppUser(any());
 
     }
 
     @Test
-    void createAppUserWithMissingFieldsShouldReturn400() throws Exception {
+    void createAppUser_WithMissingFields_ShouldReturn400() throws Exception {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -92,7 +91,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void createAppUserWithDuplicateFieldsShouldReturn409() throws Exception {
+    void createAppUser_WithDuplicateFields_ShouldReturn409() throws Exception {
         doThrow(DuplicateFoundException.class).when(appUserService).createAppUser(any());
 
         mockMvc.perform(post("/users")
@@ -111,7 +110,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void deleteAppUserShouldReturn204() throws Exception {
+    void deleteAppUser_WhenValidRequest_ShouldReturn204() throws Exception {
         mockMvc.perform(delete("/users/1"))
                 .andExpect(status().isNoContent());
 
@@ -119,7 +118,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void deleteAppUserNotFoundShouldReturn404() throws Exception {
+    void deleteAppUser_WhenNotFound_ShouldReturn404() throws Exception {
         doThrow(ResourceNotFoundException.class)
                 .when(appUserService).deleteAppUser(2L);
 
@@ -130,7 +129,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void updateAppUserShouldReturn200() throws Exception {
+    void updateAppUser_WhenValidRequest_ShouldReturn200() throws Exception {
         mockMvc.perform(put("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -146,7 +145,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void updateAppUserIdNotFoundShouldReturn404() throws Exception {
+    void updateAppUser_WhenNotFound_ShouldReturn404() throws Exception {
         doThrow(ResourceNotFoundException.class)
                 .when(appUserService).updateAppUser(eq(2L), any());
 
@@ -165,7 +164,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void updateAppUserDuplicateEmailShouldReturn409() throws Exception {
+    void updateAppUser_WhenDuplicateEmail_ShouldReturn409() throws Exception {
         doThrow(DuplicateFoundException.class).when(appUserService).updateAppUser(eq(2L), any());
 
         mockMvc.perform(put("/users/2")
@@ -184,7 +183,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void updateAppUserMissingFieldsShouldReturn400() throws Exception {
+    void updateAppUser_WhenMissingFields_ShouldReturn400() throws Exception {
         mockMvc.perform(put("/users/2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -199,7 +198,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void patchAppUserPasswordShouldReturn204() throws Exception {
+    void patchAppUserPassword_WhenValidRequest_ShouldReturn204() throws Exception {
         mockMvc.perform(patch("/users/1/password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -214,7 +213,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void patchAppUserPasswordWithoutOldPasswordShouldReturn400() throws Exception {
+    void patchAppUserPassword_WhenWithoutOldPassword_ShouldReturn400() throws Exception {
         mockMvc.perform(patch("/users/1/password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -228,7 +227,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void patchAppUserPasswordWithoutNewPasswordShouldReturn400() throws Exception {
+    void patchAppUserPassword_WhenWithoutNewPassword_ShouldReturn400() throws Exception {
         mockMvc.perform(patch("/users/1/password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -242,7 +241,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void patchAppUserStatusShouldReturn204() throws Exception {
+    void patchAppUserStatus_WhenValidRequest_ShouldReturn204() throws Exception {
         mockMvc.perform(patch("/users/1/status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -256,7 +255,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void patchAppUserStatusNoStateChangeShouldReturn400() throws Exception {
+    void patchAppUserStatus_WhenNoStateChange_ShouldReturn400() throws Exception {
         doThrow(NoStateChangeException.class).when(appUserService).changeUserStatus(eq(1L), any());
 
         mockMvc.perform(patch("/users/1/status")
@@ -272,7 +271,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void patchAppUserPositionShouldReturn204() throws Exception {
+    void patchAppUserPosition_WhenValidRequest_ShouldReturn204() throws Exception {
         mockMvc.perform(patch("/users/1/position")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -286,7 +285,7 @@ public class AppUserControllerTest {
     }
 
     @Test
-    void patchAppUserPositionNoStateChangeShouldReturn400() throws Exception {
+    void patchAppUserPosition_WhenNoStateChange_ShouldReturn400() throws Exception {
         doThrow(NoStateChangeException.class).when(appUserService).changeUserPosition(eq(1L), any());
 
         mockMvc.perform(patch("/users/1/position")

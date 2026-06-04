@@ -30,52 +30,52 @@ class AppUserSecurityTest {
     private AppUserService appUserService;
 
     @Test
-    void getAllUsersWithoutJwtShouldReturn401() throws Exception {
+    void getAllUsers_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void getAllUsersByEmployeeShouldReturn403() throws Exception {
+    void getAllUsers_ByEmployee_ShouldReturn403() throws Exception {
         mockMvc.perform(get("/users")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_EMPLOYEE"))))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void getAllUsersByAdminShouldReturn200() throws Exception {
+    void getAllUsers_ByAdmin_ShouldReturn200() throws Exception {
         mockMvc.perform(get("/users")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void findByIdWithoutJwtShouldReturn401() throws Exception {
+    void findById_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(get("/users/1"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void findByIdWithJwtShouldReturn200() throws Exception {
+    void findById_WithJwt_ShouldReturn200() throws Exception {
         mockMvc.perform(get("/users/1").with(jwt()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void createAppUserWithoutJwtShouldReturn401() throws Exception {
+    void createAppUser_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(post("/users"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void createAppUserByEmployeeShouldReturn403() throws Exception {
+    void createAppUser_ByEmployee_ShouldReturn403() throws Exception {
         mockMvc.perform(post("/users")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_EMPLOYEE"))))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void createAppUserByAdminShouldReturn201() throws Exception {
+    void createAppUser_ByAdmin_ShouldReturn201() throws Exception {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -91,33 +91,34 @@ class AppUserSecurityTest {
     }
 
     @Test
-    void deleteAppUserWithoutJwtShouldReturn401() throws Exception {
+    void deleteAppUser_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(delete(("/users/1")))
                 .andExpect(status().isUnauthorized());
+
     }
 
     @Test
-    void deleteAppUserByEmployeeShouldReturn403() throws Exception {
+    void deleteAppUser_ByEmployee_ShouldReturn403() throws Exception {
         mockMvc.perform(delete("/users/1")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_EMPLOYEE"))))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void deleteAppUserByAdminShouldReturn204() throws Exception {
+    void deleteAppUser_ByAdmin_ShouldReturn204() throws Exception {
         mockMvc.perform(delete("/users/1")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    void updateAppUserWithoutJwtShouldReturn401() throws Exception {
+    void updateAppUser_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(put("/users/1"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void updateAppUserWithJwtShouldReturn200() throws Exception {
+    void updateAppUser_WithJwt_ShouldReturn200() throws Exception {
         mockMvc.perform(put("/users/1").with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -131,13 +132,13 @@ class AppUserSecurityTest {
     }
 
     @Test
-    void patchAppUserPasswordWithoutJwtShouldReturn401() throws Exception {
+    void patchAppUserPassword_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(patch("/users/1/password"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void patchAppUserPasswordWithJwtShouldReturn204() throws Exception {
+    void patchAppUserPassword_WithJwt_ShouldReturn204() throws Exception {
         mockMvc.perform(patch("/users/1/password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -151,13 +152,13 @@ class AppUserSecurityTest {
     }
 
     @Test
-    void patchAppUserStatusWithoutJwtShouldReturn401() throws Exception {
+    void patchAppUserStatus_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(patch("/users/1/status"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void patchAppUserStatusWithJwtShouldReturn204() throws Exception {
+    void patchAppUserStatus_WithJwt_ShouldReturn204() throws Exception {
         mockMvc.perform(patch("/users/1/status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -170,20 +171,20 @@ class AppUserSecurityTest {
     }
 
     @Test
-    void patchAppUserPositionWithoutJwtShouldReturn401() throws Exception {
+    void patchAppUserPosition_WithoutJwt_ShouldReturn401() throws Exception {
         mockMvc.perform(patch("/users/1/position"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void patchAppUserPositionByEmployeeShouldReturn403() throws Exception {
+    void patchAppUserPosition_ByEmployee_ShouldReturn403() throws Exception {
         mockMvc.perform(patch("/users/1/position")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_EMPLOYEE"))))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void patchAppUserPositionByAdminShouldReturn204() throws Exception {
+    void patchAppUserPosition_ByAdmin_ShouldReturn204() throws Exception {
         mockMvc.perform(patch("/users/1/position")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
