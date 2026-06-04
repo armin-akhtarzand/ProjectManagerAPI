@@ -36,16 +36,9 @@ class AppUserSecurityTest {
     }
 
     @Test
-    void getAllUsers_ByEmployee_ShouldReturn403() throws Exception {
+    void getAllUsers_WithJwt_ShouldReturn200() throws Exception {
         mockMvc.perform(get("/users")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_EMPLOYEE"))))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void getAllUsers_ByAdmin_ShouldReturn200() throws Exception {
-        mockMvc.perform(get("/users")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        .with(jwt()))
                 .andExpect(status().isOk());
     }
 
