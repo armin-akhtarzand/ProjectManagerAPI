@@ -22,8 +22,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
 public class ProjectServiceTest {
@@ -141,7 +141,7 @@ public class ProjectServiceTest {
 
         Mockito.when(projectRepository.findById(1L))
                 .thenReturn(Optional.of(project));
-        
+
         projectService.changeProjectStatus(1L, changeProjectStatusDto);
 
         verify(projectRepository).findById(1L);
@@ -157,7 +157,7 @@ public class ProjectServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> projectService.deleteProjectById(2L));
         verify(projectRepository).findById(2L);
-        verifyNoMoreInteractions(projectRepository);
+        verify(projectRepository, never()).delete(project);
 
     }
 
@@ -179,6 +179,7 @@ public class ProjectServiceTest {
         assertThrows(NoStateChangeException.class, () -> projectService.changeProjectStatus(project.getProjectId(), changeProjectStatusDto));
         verify(projectRepository).findById(1L);
         verify(authorizationService).validateProjectManagerOrAdmin(1L);
+        verify(projectRepository, never()).save(any());
     }
 
     @Test
@@ -188,6 +189,8 @@ public class ProjectServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> projectService.changeProjectStatus(2L, any(ChangeProjectStatusDto.class)));
         verify(projectRepository).findById(2L);
+        verify(projectRepository, never()).save(any());
+
     }
 
     @Test
@@ -197,6 +200,7 @@ public class ProjectServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> projectService.updateProject(any(ProjectRequestDto.class), 2L));
         verify(projectRepository).findById(2L);
+        verify(projectRepository, never()).save(any());
     }
 
 
