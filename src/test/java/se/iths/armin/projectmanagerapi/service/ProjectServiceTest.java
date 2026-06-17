@@ -137,12 +137,10 @@ public class ProjectServiceTest {
 
     @Test
     void changeProjectStatus_WhenValidRequest_ShouldSaveUpdatedProjectStatus() {
-        ChangeProjectStatusDto changeProjectStatusDto = new ChangeProjectStatusDto(ProjectStatus.COMPLETED);
-
         Mockito.when(projectRepository.findById(1L))
                 .thenReturn(Optional.of(project));
 
-        projectService.changeProjectStatus(1L, changeProjectStatusDto);
+        projectService.changeProjectStatus(1L, new ChangeProjectStatusDto(ProjectStatus.COMPLETED));
 
         verify(projectRepository).findById(1L);
         verify(projectRepository).save(project);
@@ -155,9 +153,10 @@ public class ProjectServiceTest {
         Mockito.when(projectRepository.findById(2L))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> projectService.deleteProjectById(2L));
+        assertThrows(ResourceNotFoundException.class, ()
+                -> projectService.deleteProjectById(2L));
         verify(projectRepository).findById(2L);
-        verify(projectRepository, never()).delete(project);
+        verify(projectRepository, never()).delete(any(Project.class));
 
     }
 
@@ -166,7 +165,8 @@ public class ProjectServiceTest {
         Mockito.when(projectRepository.findById(2L))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> projectService.findProjectById(2L));
+        assertThrows(ResourceNotFoundException.class, ()
+                -> projectService.findProjectById(2L));
         verify(projectRepository).findById(2L);
     }
 
@@ -174,9 +174,10 @@ public class ProjectServiceTest {
     void changeProjectStatus_WhenNoStateChange_ShouldThrowException() {
         Mockito.when(projectRepository.findById(1L))
                 .thenReturn(Optional.of(project));
-        ChangeProjectStatusDto changeProjectStatusDto = new ChangeProjectStatusDto(ProjectStatus.PLANNED);
 
-        assertThrows(NoStateChangeException.class, () -> projectService.changeProjectStatus(project.getProjectId(), changeProjectStatusDto));
+
+        assertThrows(NoStateChangeException.class, ()
+                -> projectService.changeProjectStatus(project.getProjectId(), new ChangeProjectStatusDto(ProjectStatus.PLANNED)));
         verify(projectRepository).findById(1L);
         verify(authorizationService).validateProjectManagerOrAdmin(1L);
         verify(projectRepository, never()).save(any());
@@ -187,7 +188,8 @@ public class ProjectServiceTest {
         Mockito.when(projectRepository.findById(2L))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> projectService.changeProjectStatus(2L, any(ChangeProjectStatusDto.class)));
+        assertThrows(ResourceNotFoundException.class, ()
+                -> projectService.changeProjectStatus(2L, new ChangeProjectStatusDto(ProjectStatus.PLANNED)));
         verify(projectRepository).findById(2L);
         verify(projectRepository, never()).save(any());
 
@@ -198,7 +200,10 @@ public class ProjectServiceTest {
         Mockito.when(projectRepository.findById(2L))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> projectService.updateProject(any(ProjectRequestDto.class), 2L));
+        ProjectRequestDto requestDto = new ProjectRequestDto("Test", "Test");
+
+        assertThrows(ResourceNotFoundException.class, ()
+                -> projectService.updateProject(requestDto, 2L));
         verify(projectRepository).findById(2L);
         verify(projectRepository, never()).save(any());
     }
