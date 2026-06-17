@@ -99,7 +99,7 @@ public class ProjectControllerTest {
     }
 
     @Test
-    void updateProject_WhenValidRequest_ShouldReturn204() throws Exception {
+    void updateProject_WhenValidRequest_ShouldReturn200() throws Exception {
         mockMvc.perform(put("/projects/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(("""
@@ -130,6 +130,21 @@ public class ProjectControllerTest {
     }
 
     @Test
+    void updateProject_WhenMissingFields_ShouldReturn404() throws Exception {
+        mockMvc.perform(put("/projects/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(("""
+                                {
+                                "description":"update"
+                                }
+                                """)))
+                .andExpect(status().isBadRequest());
+
+        verify(projectService, never()).updateProject(any(), eq(1L));
+
+    }
+
+    @Test
     void changeProjectStatus_WhenValidRequest_ShouldReturn204() throws Exception {
         mockMvc.perform(patch("/projects/1/status")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -144,7 +159,7 @@ public class ProjectControllerTest {
     }
 
     @Test
-    void changeProjectStatus_WhenProjectNotFound_ShouldReturn404() throws Exception {
+    void changeProjectStatus_WhenProjectNotFound_ShouldReturn400() throws Exception {
         doThrow(ResourceNotFoundException.class).when(projectService).changeProjectStatus(eq(1L), any());
         mockMvc.perform(patch("/projects/1/status")
                         .contentType(MediaType.APPLICATION_JSON)
