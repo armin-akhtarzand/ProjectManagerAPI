@@ -27,6 +27,7 @@ public class ProjectUser {
     private AppUser appUser;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProjectRole projectRole = ProjectRole.PROJECT_MEMBER;
     @Column(name = "joined_at", nullable = false)
     private LocalDateTime joinedAt;
