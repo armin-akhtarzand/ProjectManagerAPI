@@ -1,5 +1,6 @@
 package se.iths.armin.projectmanagerapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +35,14 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectResponseDto> saveProject(@RequestBody ProjectRequestDto projectRequestDto) {
+    public ResponseEntity<ProjectResponseDto> saveProject(@RequestBody @Valid ProjectRequestDto projectRequestDto) {
         ProjectResponseDto project = projectService.createProject(projectRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(project);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectResponseDto> updateProject(@RequestBody ProjectRequestDto projectRequestDto,
+    public ResponseEntity<ProjectResponseDto> updateProject(@RequestBody @Valid ProjectRequestDto projectRequestDto,
                                                             @PathVariable Long id) {
         ProjectResponseDto project = projectService.updateProject(projectRequestDto, id);
 
