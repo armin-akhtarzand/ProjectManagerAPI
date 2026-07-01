@@ -5,6 +5,10 @@ import se.iths.armin.projectmanagerapi.entity.enums.ProjectRole;
 
 public record ChangeProjectRoleDto(
         @NotNull(message = "New Project role is required")
-        ProjectRole role
+        ProjectRole role,
+        @NotNull(message = "User is required")
+        Long appUserId,
+        @NotNull(message = "Project is required")
+        Long projectId
 ) {
 }
