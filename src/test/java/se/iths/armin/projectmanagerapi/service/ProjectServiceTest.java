@@ -96,7 +96,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    void deleteProject_WhenValidRequest_ShouldDeleteProjectResponseDto() {
+    void deleteProject_WhenValidRequest_ShouldDeleteProject() {
         Mockito.when(projectRepository.findById(1L))
                 .thenReturn(Optional.of(project));
 
