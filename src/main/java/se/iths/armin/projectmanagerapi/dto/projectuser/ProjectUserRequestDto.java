@@ -1,11 +1,11 @@
 package se.iths.armin.projectmanagerapi.dto.projectuser;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record ProjectUserRequestDto(
-        @NotBlank(message = "Project is required")
-        Long projectId,
-        @NotBlank(message = "User is required")
-        Long appUserId
+        @NotNull(message = "User is required")
+        Long appUserId,
+        @NotNull(message = "Project is required")
+        Long projectId
 ) {
 }

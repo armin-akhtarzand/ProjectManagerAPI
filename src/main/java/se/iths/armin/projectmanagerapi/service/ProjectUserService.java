@@ -3,14 +3,10 @@ package se.iths.armin.projectmanagerapi.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import se.iths.armin.projectmanagerapi.dto.projectuser.ProjectMemberResponseDto;
-import se.iths.armin.projectmanagerapi.dto.projectuser.ProjectUserRequestDto;
-import se.iths.armin.projectmanagerapi.dto.projectuser.ProjectUserResponseDto;
-import se.iths.armin.projectmanagerapi.dto.projectuser.UserProjectResponseDto;
+import se.iths.armin.projectmanagerapi.dto.projectuser.*;
 import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.ProjectUser;
-import se.iths.armin.projectmanagerapi.entity.enums.ProjectRole;
 import se.iths.armin.projectmanagerapi.exception.DuplicateFoundException;
 import se.iths.armin.projectmanagerapi.exception.NoStateChangeException;
 import se.iths.armin.projectmanagerapi.exception.ResourceNotFoundException;
@@ -49,37 +45,27 @@ public class ProjectUserService {
 
     @Transactional
     public void removeUserFromProject(ProjectUserRequestDto projectUserRequestDto) {
-
-
+        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
         ProjectUser projectUser = projectUserMapper.toEntity(projectUserRequestDto);
 
         ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
-        authorizationService.validateProjectManagerOrAdmin(existingProjectUser.getProject().getProjectId());
 
 
         projectUserRepository.delete(existingProjectUser);
     }
 
-    public ProjectUserResponseDto getUserFromProject(ProjectUserRequestDto projectUserRequestDto) {
-        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
-        ProjectUser projectUser = projectUserMapper.toEntity(projectUserRequestDto);
-        ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
-
-        return projectUserMapper.toDto(existingProjectUser);
-    }
-
     @Transactional
-    public void changeProjectRole(ProjectUserRequestDto projectUserRequestDto, ProjectRole newRole) {
-        authorizationService.validateProjectManagerOrAdmin(projectUserRequestDto.projectId());
-        ProjectUser projectUser = projectUserMapper.toEntity(projectUserRequestDto);
-        ProjectUser existingProjectUser = getProjectUser(projectUser.getAppUser(), projectUser.getProject());
+    public void changeProjectRole(ChangeProjectRoleDto changeProjectRoleDto) {
+        authorizationService.validateProjectManagerOrAdmin(changeProjectRoleDto.projectId());
+        Project project = projectService.getProject(changeProjectRoleDto.projectId());
+        AppUser appUser = appUserService.getAppUser(changeProjectRoleDto.appUserId());
+        ProjectUser existingProjectUser = getProjectUser(appUser, project);
 
-
-        if (existingProjectUser.getProjectRole().equals(newRole)) {
+        if (existingProjectUser.getProjectRole().equals(changeProjectRoleDto.role())) {
             throw new NoStateChangeException("Role is already: " + existingProjectUser.getProjectRole());
         }
 
-        existingProjectUser.setProjectRole(newRole);
+        existingProjectUser.setProjectRole(changeProjectRoleDto.role());
         projectUserRepository.save(existingProjectUser);
     }
 
@@ -90,7 +76,6 @@ public class ProjectUserService {
     }
 
     public List<ProjectMemberResponseDto> getAllUsersFromProject(Long projectId) {
-
         Project project = projectService.getProject(projectId);
 
         List<ProjectUser> appUsersFromProject = projectUserRepository.findAllByProject(project);
