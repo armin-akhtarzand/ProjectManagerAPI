@@ -12,16 +12,18 @@ import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.ProjectUser;
 import se.iths.armin.projectmanagerapi.entity.enums.ProjectRole;
+import se.iths.armin.projectmanagerapi.exception.DuplicateFoundException;
+import se.iths.armin.projectmanagerapi.exception.NoStateChangeException;
+import se.iths.armin.projectmanagerapi.exception.ResourceNotFoundException;
 import se.iths.armin.projectmanagerapi.mapper.ProjectUserMapperImpl;
 import se.iths.armin.projectmanagerapi.repository.ProjectUserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProjectUserServiceTest {
@@ -76,12 +78,12 @@ public class ProjectUserServiceTest {
     @Test
     void addUserToProject_WhenValidRequest_ShouldReturnProjectUserResponseDto() {
         Mockito.when(projectUserMapper.toEntity(requestDto)).thenReturn(projectUser);
-        Mockito.when(projectUserRepository.save(any(ProjectUser.class))).thenReturn(projectUser);
+        Mockito.when(projectUserRepository.save(projectUser)).thenReturn(projectUser);
         Mockito.when(projectUserMapper.toDto(projectUser)).thenReturn(responseDto);
 
         ProjectUserResponseDto result = projectUserService.addUserToProject(requestDto);
 
-        assertEquals(result, responseDto);
+        assertEquals(responseDto, result);
         verify(authorizationService).validateProjectManagerOrAdmin(
                 projectUser.getProject().getProjectId());
         assertNotNull(result);
@@ -104,7 +106,7 @@ public class ProjectUserServiceTest {
 
     @Test
     void getAllUsersFromProject_WhenValidRequest_ShouldReturnProjectMemberResponseDto() {
-        Mockito.when(projectService.getProject(any())).thenReturn(project);
+        Mockito.when(projectService.getProject(project.getProjectId())).thenReturn(project);
         Mockito.when(projectUserRepository.findAllByProject(project)).thenReturn(List.of(projectUser));
         ProjectMemberResponseDto memberResponseDto = new ProjectMemberResponseDto(
                 user.getUserid(), user.getFirstname(),
@@ -123,7 +125,7 @@ public class ProjectUserServiceTest {
 
     @Test
     void getAllProjectsFromUser_WhenValidRequest_ShouldReturnUserProjectResponseDto() {
-        Mockito.when(appUserService.getAppUser(any())).thenReturn(user);
+        Mockito.when(appUserService.getAppUser(user.getUserid())).thenReturn(user);
         Mockito.when(projectUserRepository.findAllByAppUser(user)).thenReturn(List.of(projectUser));
         UserProjectResponseDto userProjectResponseDto = new UserProjectResponseDto(
                 project.getProjectId(), project.getTitle(), project.getProjectStatus(),
@@ -142,8 +144,8 @@ public class ProjectUserServiceTest {
 
     @Test
     void changeProjectRole_WhenValidRequest_ShouldChangeProjectRole() {
-        Mockito.when(projectService.getProject(any())).thenReturn(project);
-        Mockito.when(appUserService.getAppUser(any())).thenReturn(user);
+        Mockito.when(projectService.getProject(project.getProjectId())).thenReturn(project);
+        Mockito.when(appUserService.getAppUser(user.getUserid())).thenReturn(user);
         Mockito.when(projectUserRepository.findByAppUserAndProject(
                 user, project)).thenReturn(Optional.of(projectUser));
         ChangeProjectRoleDto changeProjectRoleDto = new ChangeProjectRoleDto(
@@ -157,6 +159,115 @@ public class ProjectUserServiceTest {
         verify(authorizationService).validateProjectManagerOrAdmin(projectUser.getProject().getProjectId());
         verify(projectService).getProject(project.getProjectId());
         verify(appUserService).getAppUser(user.getUserid());
+    }
+
+    @Test
+    void addUserToProject_WhenDuplicate_ShouldThrowException() {
+        Mockito.when(projectUserMapper.toEntity(requestDto)).thenReturn(projectUser);
+        Mockito.when(projectUserRepository.existsByAppUserAndProject(user, project)).thenReturn(Boolean.TRUE);
+
+
+        assertThrows(DuplicateFoundException.class,
+                () -> projectUserService.addUserToProject(requestDto));
+        verify(projectUserMapper).toEntity(requestDto);
+        verify(projectUserRepository, never()).save(projectUser);
+    }
+
+    @Test
+    void removeUserFromProject_WhenNotFound_ShouldThrowException() {
+        when(projectUserMapper.toEntity(requestDto)).thenReturn(projectUser);
+        when(projectUserRepository.findByAppUserAndProject
+                (user, project)).thenReturn(Optional.empty());
+
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> projectUserService.removeUserFromProject(requestDto));
+        verify(projectUserRepository).findByAppUserAndProject(user, project);
+        verify(projectUserMapper).toEntity(requestDto);
+        verify(projectUserRepository, never()).delete(projectUser);
+    }
+
+    @Test
+    void getAllUsersFromProject_WhenNotFound_ShouldThrowException() {
+        ;
+        when(projectService.getProject(2L)).thenThrow(ResourceNotFoundException.class);
+
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> projectUserService.getAllUsersFromProject(2L));
+        verify(projectService).getProject(2L);
+        verify(projectUserRepository, never()).findAllByProject(any());
+    }
+
+    @Test
+    void getAllProjectsFromUser_WhenNotFound_ShouldThrowException() {
+        when(appUserService.getAppUser(2L)).thenThrow(ResourceNotFoundException.class);
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> projectUserService.getAllProjectsFromUser(2L));
+
+        verify(appUserService).getAppUser(2L);
+        verify(projectUserRepository, never()).findAllByAppUser(any());
+    }
+
+    @Test
+    void changeProjectRole_WhenNoStateChange_ShouldThrowException() {
+        when(projectUserRepository.findByAppUserAndProject
+                (user, project)).thenReturn(Optional.of(projectUser));
+        when(projectService.getProject(project.getProjectId())).thenReturn(project);
+        when(appUserService.getAppUser(user.getUserid())).thenReturn(user);
+        ChangeProjectRoleDto changeProjectRoleDto =
+                new ChangeProjectRoleDto(ProjectRole.PROJECT_MEMBER, user.getUserid(), project.getProjectId());
+
+
+        assertThrows(NoStateChangeException.class,
+                () -> projectUserService.changeProjectRole(changeProjectRoleDto));
+        verify(projectUserRepository).findByAppUserAndProject(user, project);
+        verify(projectUserRepository, never()).save(projectUser);
+    }
+
+    @Test
+    void changeProjectRole_WhenUserNotFound_ShouldThrowException() {
+        when(projectService.getProject(project.getProjectId())).thenReturn(project);
+        when(appUserService.getAppUser(2L)).thenReturn(null);
+        ChangeProjectRoleDto changeProjectRoleDto = new ChangeProjectRoleDto
+                (ProjectRole.PROJECT_MEMBER, 2L, project.getProjectId());
+
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> projectUserService.changeProjectRole(changeProjectRoleDto));
+        verify(projectUserRepository, never()).findByAppUserAndProject(user, project);
+        verify(projectUserRepository, never()).save(projectUser);
+    }
+
+    @Test
+    void changeProjectRole_WhenProjectNotFound_ShouldThrowException() {
+        when(projectService.getProject(2L)).thenReturn(null);
+        when(appUserService.getAppUser(user.getUserid())).thenReturn(user);
+        ChangeProjectRoleDto changeProjectRoleDto = new ChangeProjectRoleDto
+                (ProjectRole.PROJECT_MEMBER, user.getUserid(), 2L);
+
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> projectUserService.changeProjectRole(changeProjectRoleDto));
+        verify(projectUserRepository, never()).findByAppUserAndProject(user, project);
+        verify(projectUserRepository, never()).save(projectUser);
+    }
+
+    @Test
+    void changeProjectRole_UserNotMember_ShouldThrowException() {
+        when(projectService.getProject(project.getProjectId())).thenReturn(project);
+        when(appUserService.getAppUser(user.getUserid())).thenReturn(user);
+        when(projectUserRepository.findByAppUserAndProject(user, project)).thenReturn(Optional.empty());
+        ChangeProjectRoleDto changeProjectRoleDto = new ChangeProjectRoleDto
+                (ProjectRole.PROJECT_MEMBER, user.getUserid(), project.getProjectId());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> projectUserService.changeProjectRole(changeProjectRoleDto));
+        verify(projectUserRepository).findByAppUserAndProject(user, project);
+        verify(projectService).getProject(project.getProjectId());
+        verify(appUserService).getAppUser(user.getUserid());
+        verify(projectUserRepository, never()).save(projectUser);
     }
 
 
