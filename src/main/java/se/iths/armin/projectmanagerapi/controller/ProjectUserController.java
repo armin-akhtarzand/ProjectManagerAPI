@@ -50,14 +50,14 @@ public class ProjectUserController {
     }
 
     @PatchMapping("/projects/members/role")
-    public ResponseEntity<Void> changeMemberRole(
+    public ResponseEntity<Void> changeProjectRole(
             @RequestBody @Valid ChangeProjectRoleDto changeProjectRoleDto) {
         projectUserService.changeProjectRole(changeProjectRoleDto);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/project/members")
+    @DeleteMapping("/projects/members")
     public ResponseEntity<Void> removeUserFromProject(
             @RequestBody @Valid ProjectUserRequestDto projectUserRequestDto
     ) {
