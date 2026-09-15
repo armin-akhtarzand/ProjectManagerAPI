@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record TaskRequestDto(
-        @NotNull(message = "Creator required")
-        Long creatorId,
         @NotNull(message = "Assignee required")
         Long assigneeId,
         @NotBlank(message = "Title is required")

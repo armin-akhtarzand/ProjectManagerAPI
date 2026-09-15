@@ -1,8 +1,9 @@
 package se.iths.armin.projectmanagerapi.dto.task;
 
+import jakarta.validation.constraints.NotNull;
+
 public record ChangeTaskAssigneeDto(
-        Long assigneeId,
-        String assigneeFirstname,
-        String assigneeLastname
+        @NotNull
+        Long assigneeId
 ) {
 }

@@ -23,11 +23,10 @@ public class TaskMapperImpl
             return null;
         }
 
-        AppUser createdBy = appUserService.getAppUser(taskRequestDto.creatorId());
+
         AppUser assignee = appUserService.getAppUser(taskRequestDto.assigneeId());
 
         Task task = new Task();
-        task.setCreatedBy(createdBy);
         task.setAssignee(assignee);
         task.setDescription(taskRequestDto.description());
         task.setTitle(taskRequestDto.title());
