@@ -32,9 +32,11 @@ public class TaskService {
 
         authorizationService.validateProjectManagerOrAdmin(projectId);
         Project project = projectService.getProject(projectId);
+        AppUser currentUser = authorizationService.getCurrentUser();
 
         Task task = taskMapper.toEntity(taskRequestDto);
         task.setProject(project);
+        task.setCreatedBy(currentUser);
         boolean isMember = projectUserRepository.existsByAppUserAndProject(task.getAssignee(), project);
         if (!isMember) {
             throw new ResourceNotFoundException("Assignee is not a member of project");
@@ -51,8 +53,8 @@ public class TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
     }
 
-    public TaskResponseDto findTaskById(Long taskId) {
-        Task task = getTask(taskId);
+    public TaskResponseDto findTaskById(Long taskId, Long projectId) {
+        Task task = getTaskFromProject(projectId, taskId);
 
         return taskMapper.toDto(task);
     }
@@ -66,8 +68,8 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDto updateTask(Long taskId, TaskUpdateDto taskUpdateDto) {
-        Task task = getTask(taskId);
+    public TaskResponseDto updateTask(Long taskId, Long projectId, TaskUpdateDto taskUpdateDto) {
+        Task task = getTaskFromProject(projectId, taskId);
         authorizationService.validateProjectManagerOrAdmin(task.getProject().getProjectId());
 
         taskMapper.update(task, taskUpdateDto);
@@ -76,20 +78,20 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(Long taskId) {
+    public void deleteTask(Long taskId, Long projectId) {
 
-        Task task = getTask(taskId);
+        Task task = getTaskFromProject(projectId, taskId);
         authorizationService.validateProjectManagerOrAdmin(task.getProject().getProjectId());
 
         taskRepository.delete(task);
     }
 
     @Transactional
-    public void updateTaskStatus(Long userId, Long taskId,
+    public void changeTaskStatus(Long taskId, Long projectId,
                                  ChangeTaskStatusDto changeTaskStatusDto) {
 
-        Task task = getTask(taskId);
-        authorizationService.validateSelfAdminOrProjectManager(userId, task.getProject().getProjectId());
+        Task task = getTaskFromProject(projectId, taskId);
+        authorizationService.validateSelfAdminOrProjectManager(task.getAssignee().getUserid(), task.getProject().getProjectId());
 
         if (task.getTaskStatus().equals(changeTaskStatusDto.status())) {
             throw new NoStateChangeException("Task already has this status");
@@ -99,8 +101,8 @@ public class TaskService {
     }
 
     @Transactional
-    public void changeTaskAssignee(ChangeTaskAssigneeDto changeTaskAssigneeDto, Long taskId) {
-        Task task = getTask(taskId);
+    public void changeTaskAssignee(ChangeTaskAssigneeDto changeTaskAssigneeDto, Long projectId, Long taskId) {
+        Task task = getTaskFromProject(projectId, taskId);
         authorizationService.validateProjectManagerOrAdmin(task.getProject().getProjectId());
 
         AppUser newAssignee = appUserService.getAppUser(changeTaskAssigneeDto.assigneeId());
@@ -116,6 +118,16 @@ public class TaskService {
 
         task.setAssignee(newAssignee);
         taskRepository.save(task);
+    }
+
+    private Task getTaskFromProject(Long projectId, Long taskId) {
+        Task task = getTask(taskId);
+
+        if (!task.getProject().getProjectId().equals(projectId)) {
+            throw new ResourceNotFoundException("Task does not belong to this project");
+        }
+
+        return task;
     }
 
 
