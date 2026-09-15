@@ -31,9 +31,11 @@ public class TaskService {
     public TaskResponseDto createTask(TaskRequestDto taskRequestDto, Long projectId) {
 
         authorizationService.validateProjectManagerOrAdmin(projectId);
+        Project project = projectService.getProject(projectId);
 
         Task task = taskMapper.toEntity(taskRequestDto);
-        boolean isMember = projectUserRepository.existsByAppUserAndProject(task.getAssignee(), task.getProject());
+        task.setProject(project);
+        boolean isMember = projectUserRepository.existsByAppUserAndProject(task.getAssignee(), project);
         if (!isMember) {
             throw new ResourceNotFoundException("Assignee is not a member of project");
         }
