@@ -9,14 +9,12 @@ import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Project;
 import se.iths.armin.projectmanagerapi.entity.Task;
 import se.iths.armin.projectmanagerapi.service.AppUserService;
-import se.iths.armin.projectmanagerapi.service.ProjectService;
 
 @Component
 @RequiredArgsConstructor
 public class TaskMapperImpl
         implements EntityMapper<Task, TaskRequestDto, TaskResponseDto> {
 
-    private final ProjectService projectService;
     private final AppUserService appUserService;
 
     @Override
@@ -27,12 +25,10 @@ public class TaskMapperImpl
 
         AppUser createdBy = appUserService.getAppUser(taskRequestDto.creatorId());
         AppUser assignee = appUserService.getAppUser(taskRequestDto.assigneeId());
-        Project project = projectService.getProject(taskRequestDto.projectId());
 
         Task task = new Task();
         task.setCreatedBy(createdBy);
         task.setAssignee(assignee);
-        task.setProject(project);
         task.setDescription(taskRequestDto.description());
         task.setTitle(taskRequestDto.title());
         task.setDeadline(taskRequestDto.deadline());
