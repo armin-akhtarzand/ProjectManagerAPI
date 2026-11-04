@@ -30,10 +30,9 @@ public class CommentService {
 
 
     @Transactional
-    public CommentResponseDto create(CommentRequestDto commentRequestDto, Long taskId, Long projectId,
-                                     Long userId) {
+    public CommentResponseDto create(CommentRequestDto commentRequestDto, Long taskId, Long projectId) {
         Project project = projectService.getProject(projectId);
-        AppUser from = appUserService.getAppUser(userId);
+        AppUser from = authorizationService.getCurrentUser();
         Task task = taskService.getTask(taskId);
         projectUserService.getProjectUser(from, project);
 
