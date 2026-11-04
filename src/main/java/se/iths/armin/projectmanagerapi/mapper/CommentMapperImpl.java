@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 import se.iths.armin.projectmanagerapi.dto.comment.CommentRequestDto;
 import se.iths.armin.projectmanagerapi.dto.comment.CommentResponseDto;
 import se.iths.armin.projectmanagerapi.dto.comment.CommentUpdateDto;
-import se.iths.armin.projectmanagerapi.entity.AppUser;
 import se.iths.armin.projectmanagerapi.entity.Comment;
-import se.iths.armin.projectmanagerapi.entity.Task;
 import se.iths.armin.projectmanagerapi.service.AppUserService;
 import se.iths.armin.projectmanagerapi.service.TaskService;
 
@@ -25,13 +23,9 @@ public class CommentMapperImpl
         if (commentRequestDto == null) {
             return null;
         }
-        Task task = taskService.getTask(commentRequestDto.taskId());
-        AppUser appUser = appUserService.getAppUser(commentRequestDto.fromId());
 
         Comment comment = new Comment();
         comment.setContent(commentRequestDto.content());
-        comment.setTask(task);
-        comment.setAppUser(appUser);
 
 
         return comment;
