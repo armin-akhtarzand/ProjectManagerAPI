@@ -24,7 +24,6 @@ public class CommentService {
     private final CommentMapperImpl commentMapper;
     private final ProjectUserService projectUserService;
     private final ProjectService projectService;
-    private final AppUserService appUserService;
     private final TaskService taskService;
     private final AuthorizationService authorizationService;
 
@@ -48,8 +47,12 @@ public class CommentService {
         return commentMapper.toDto(saved);
     }
 
-    public List<CommentResponseDto> findAllByTask(Long taskId) {
+    public List<CommentResponseDto> findAllByTask(Long taskId, Long projectId) {
         Task task = taskService.getTask(taskId);
+
+        if (!task.getProject().getProjectId().equals(projectId)) {
+            throw new ResourceNotFoundException("Task does not belong to project");
+        }
 
         List<Comment> comments = commentRepository.findAllByTask(task);
 
@@ -59,18 +62,33 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(CommentUpdateDto commentUpdateDto, Long commentId) {
+    public void update(CommentUpdateDto commentUpdateDto, Long commentId, Long projectId, Long taskId) {
         Comment comment = getComment(commentId);
 
+        if (!comment.getTask().getTaskId().equals(taskId)) {
+            throw new ResourceNotFoundException("Comment does not belong to task");
+        }
+        if (!comment.getTask().getProject().getProjectId().equals(projectId)) {
+            throw new ResourceNotFoundException("Task does not belong to project");
+        }
+
         authorizationService.validateSelf(comment.getAppUser().getUserid());
+
 
         commentMapper.update(commentUpdateDto, comment);
     }
 
     @Transactional
-    public void delete(Long commentId) {
+    public void delete(Long commentId, Long taskId, Long projectId) {
 
         Comment comment = getComment(commentId);
+
+        if (!comment.getTask().getTaskId().equals(taskId)) {
+            throw new ResourceNotFoundException("Comment does not belong to task");
+        }
+        if (!comment.getTask().getProject().getProjectId().equals(projectId)) {
+            throw new ResourceNotFoundException("Task does not belong to project");
+        }
         authorizationService.validateSelfAdminOrProjectManager(comment.getAppUser().getUserid(), comment.getTask().getProject().getProjectId());
 
         commentRepository.delete(comment);

@@ -20,16 +20,16 @@ public class CommentController {
 
     @GetMapping
     ResponseEntity<List<CommentResponseDto>> getAllComments(@PathVariable Long projectId, @PathVariable Long taskId) {
-        List<CommentResponseDto> responseDto = commentService.findAllByTask(taskId);
+        List<CommentResponseDto> responseDto = commentService.findAllByTask(taskId, projectId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @PostMapping
     ResponseEntity<CommentResponseDto> createComment(@RequestBody CommentRequestDto commentRequestDto,
-                                                     @PathVariable Long projectId,
-                                                     @PathVariable Long taskId) {
-        CommentResponseDto responseDto = commentService.create(commentRequestDto, projectId, taskId);
+                                                     @PathVariable Long taskId,
+                                                     @PathVariable Long projectId) {
+        CommentResponseDto responseDto = commentService.create(commentRequestDto, taskId, projectId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
