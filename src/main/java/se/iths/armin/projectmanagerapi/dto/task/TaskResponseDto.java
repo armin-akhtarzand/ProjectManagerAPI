@@ -9,7 +9,7 @@ public record TaskResponseDto(
         String creatorName,
         Long assigneeId,
         String assigneeFirstname,
-        String assigneLastname,
+        String assigneeLastname,
         Long projectId,
         String projectName,
         String title,
