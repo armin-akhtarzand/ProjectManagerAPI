@@ -1,5 +1,6 @@
 package se.iths.armin.projectmanagerapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CommentController {
     }
 
     @PostMapping
-    ResponseEntity<CommentResponseDto> createComment(@RequestBody CommentRequestDto commentRequestDto,
+    ResponseEntity<CommentResponseDto> createComment(@RequestBody @Valid CommentRequestDto commentRequestDto,
                                                      @PathVariable Long taskId,
                                                      @PathVariable Long projectId) {
         CommentResponseDto responseDto = commentService.create(commentRequestDto, taskId, projectId);
@@ -36,7 +37,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    ResponseEntity<Void> updateComment(@RequestBody CommentUpdateDto commentUpdateDto,
+    ResponseEntity<Void> updateComment(@RequestBody @Valid CommentUpdateDto commentUpdateDto,
                                        @PathVariable Long taskId,
                                        @PathVariable Long projectId,
                                        @PathVariable Long commentId) {
