@@ -62,7 +62,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(CommentUpdateDto commentUpdateDto, Long commentId, Long projectId, Long taskId) {
+    public void update(CommentUpdateDto commentUpdateDto, Long commentId, Long taskId, Long projectId) {
         Comment comment = getComment(commentId);
 
         if (!comment.getTask().getTaskId().equals(taskId)) {
